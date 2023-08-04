@@ -1,12 +1,11 @@
 html, body {
-    position: absolute;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 0;
-    height: 100%;
-    width: 100%;
+    height: 500px;
+    width: 500px;
 }
 
 .main-container {
@@ -16,7 +15,7 @@ html, body {
     flex-direction: column;
     align-items: center;
     width: fit-content;
-    height: 30%;
+    height: 100%;
 }
 
 #name {

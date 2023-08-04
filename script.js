@@ -4,9 +4,13 @@ const load = document.getElementById('load')
 const remove = document.getElementById('remove')
 const selected = "AssemblyButtonBase AssemblyIconButton AssemblyIconButton--highlight AssemblyIconButton--circle AssemblyButtonBase--medium AssemblyButtonBase--circle"
 const unselected = "AssemblyButtonBase AssemblyIconButton AssemblyIconButton--tertiary AssemblyIconButton--circle AssemblyButtonBase--medium AssemblyButtonBase--circle"
+let url = ""
+getUrl()
+
 
 function saveStarredItems() {
     const items = document.getElementsByClassName('SetPageTerms-term')
+    let groups = JSON.parse(localStorage.getItem('groups')) || {}
     let starredItems = {}
 
     for (const item of items) {
@@ -24,7 +28,6 @@ function saveStarredItems() {
         }
     }
 
-    let groups = JSON.parse(localStorage.getItem('groups')) || {}
     groups[input.value] = starredItems
     localStorage.setItem('groups', JSON.stringify(groups))
 }
@@ -54,14 +57,12 @@ function loadStarredItems() {
     }
 }
 
-/*
-https://quizlet.com/787638194/berakningar-flash-cards/
-
-LOCALSTORAGE:
-{
-    groupName: {
-        term: definition
-    }
+function getUrl() {
+    chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
+        url = tabs[0].url
+    })
 }
 
-*/
+save.addEventListener('click', saveStarredItems)
+load.addEventListener('click', loadStarredItems)
+remove.addEventListener('click', getUrl)
