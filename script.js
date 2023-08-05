@@ -5,12 +5,14 @@ const remove = document.getElementById('remove')
 const selected = "AssemblyButtonBase AssemblyIconButton AssemblyIconButton--highlight AssemblyIconButton--circle AssemblyButtonBase--medium AssemblyButtonBase--circle"
 const unselected = "AssemblyButtonBase AssemblyIconButton AssemblyIconButton--tertiary AssemblyIconButton--circle AssemblyButtonBase--medium AssemblyButtonBase--circle"
 let url = ""
-getUrl()
-
+let set = ""
+init()
 
 function saveStarredItems() {
+    if (input.value.length === 0) { return false }
+    
     const items = document.getElementsByClassName('SetPageTerms-term')
-    let groups = JSON.parse(localStorage.getItem('groups')) || {}
+    let groups = JSON.parse(localStorage.getItem('groups'))
     let starredItems = {}
 
     for (const item of items) {
@@ -22,25 +24,25 @@ function saveStarredItems() {
     }
 
     if (starredItems.length === 0) { return false }
-    if (groups.hasOwnProperty(input.value)) {
+    if (groups[set].hasOwnProperty(input.value)) {
         if (!confirm(`There already exists a group with the name ${input.value}. Do you want to override it?`)) {
             return false
         }
     }
 
-    groups[input.value] = starredItems
+    groups[set][input.value] = starredItems
     localStorage.setItem('groups', JSON.stringify(groups))
 }
 
 function removeGroup() {
-    let groups = JSON.parse(localStorage.getItem('groups')) || {}
-    delete groups[input.value]
+    let groups = JSON.parse(localStorage.getItem('groups'))
+    delete groups[set][input.value]
     localStorage.setItem('groups', JSON.stringify(groups))
 }
 
 function loadStarredItems() {
     const items = document.getElementsByClassName('SetPageTerms-term')
-    let groups = JSON.parse(localStorage.getItem('groups')) || {}
+    let groups = JSON.parse(localStorage.getItem('groups'))
 
     for (let item of items) {
         let star = item.getElementsByClassName('hja6hsw a1hp6gla')[0].children[0]
@@ -48,8 +50,8 @@ function loadStarredItems() {
         
         // Check for which items to be starred (also checks if you have switched between term and definition)
         const [term, definition] = item.getElementsByClassName('TermText notranslate lang-en')
-        const groupTerm = groups[input.value][definition.textContent]
-        const groupDefinition = groups[input.value][term.textContent]
+        const groupTerm = groups[set][input.value][definition.textContent]
+        const groupDefinition = groups[set][input.value][term.textContent]
 
         if (groupDefinition === definition.textContent || groupTerm === term.textContent) {
             star.click()
@@ -57,12 +59,24 @@ function loadStarredItems() {
     }
 }
 
-function getUrl() {
-    chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
-        url = tabs[0].url
-    })
+function init() {
+    chrome.tabs.query({ active: true, currentWindow: true }, async function (tabs) { url = tabs[0].url })
+    
+    setTimeout(() => {
+        const regex = /^https:\/\/quizlet\.com\/\d+\/.*$/
+        if (!regex.test(url)) { window.close() }
+        else {
+            set = url.split('/')[3]
+            let dict = localStorage.getItem('groups') || {}
+            dict[set] = {}
+            localStorage.setItem('groups', dict)
+            console.log("Hi")
+        }
+    }, 1)
 }
+
+
 
 save.addEventListener('click', saveStarredItems)
 load.addEventListener('click', loadStarredItems)
-remove.addEventListener('click', getUrl)
+remove.addEventListener('click', removeGroup)
