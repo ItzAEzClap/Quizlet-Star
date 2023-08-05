@@ -30,6 +30,7 @@ function saveStarredItems() {
 function removeGroup() {
     let groups = JSON.parse(localStorage.getItem('groups'))
     delete groups[set][input.value]
+    removeOption(input.value)
     localStorage.setItem('groups', JSON.stringify(groups))
 }
 
@@ -63,6 +64,12 @@ function addOption(name) {
     option.textContent = name
     option.type = 'button'
     document.querySelector('section').appendChild(option)
+}
+
+function removeOption(name) {
+    for (let child of document.querySelector('section').children) {
+        if (child.value === name) { document.querySelector('section').removeChild(child) }
+    }
 }
 
 save.addEventListener('click', saveStarredItems)
