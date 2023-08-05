@@ -2,7 +2,6 @@ const input = document.getElementById('name')
 const save = document.getElementById('save')
 const load = document.getElementById('load')
 const remove = document.getElementById('remove')
-const unselected = "AssemblyButtonBase AssemblyIconButton AssemblyIconButton--tertiary AssemblyIconButton--circle AssemblyButtonBase--medium AssemblyButtonBase--circle"
 let tab = ""
 let set = ""
 init()
@@ -29,8 +28,8 @@ function saveStarredItems() {
 
 function removeGroup() {
     let groups = JSON.parse(localStorage.getItem('groups'))
-    delete groups[set][input.value]
     removeOption(input.value)
+    delete groups[set][input.value]
     localStorage.setItem('groups', JSON.stringify(groups))
 }
 
