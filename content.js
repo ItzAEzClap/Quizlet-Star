@@ -11,7 +11,7 @@ function gotMessage(message, sender, sendResponse) {
             if (star.className === selected) {
                 const term = item.getElementsByClassName('SetPageTerm-wordText')[0].children[0].textContent
                 const definition = item.getElementsByClassName('SetPageTerm-definitionText')[0].children[0].textContent
-                starredItems[term.textContent] = definition.textContent
+                starredItems[term] = definition
             }
         }
         console.log(starredItems)
@@ -26,10 +26,10 @@ function gotMessage(message, sender, sendResponse) {
             // Check for which items to be starred (also checks if you have switched between term and definition)
             const term = item.getElementsByClassName('SetPageTerm-wordText')[0].children[0].textContent
             const definition = item.getElementsByClassName('SetPageTerm-definitionText')[0].children[0].textContent
-            const groupTerm = message.data[definition.textContent]
-            const groupDefinition = message.data[term.textContent]
+            const groupTerm = message.data[definition]
+            const groupDefinition = message.data[term]
 
-            if (groupDefinition === definition.textContent || groupTerm === term.textContent) {
+            if (groupDefinition === definition || groupTerm === term) {
                 star.className = selected
             }
         }
