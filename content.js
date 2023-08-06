@@ -14,7 +14,6 @@ function gotMessage(message, sender, sendResponse) {
                 starredItems[term] = definition
             }
         }
-        console.log(starredItems)
         sendResponse(starredItems)
     } else if (message.type === 'load') {
         const items = document.getElementsByClassName('SetPageTerms-term')
