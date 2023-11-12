@@ -9,15 +9,14 @@ function init() {
         currentTab = tabs[0]
         const regex = /^https:\/\/quizlet\.com\/\d+\/.*$/
         
-        if (!regex.test(currentTab.url)) { window.close() }
-        else {
-            set = currentTab.url.split('/')[3]
-            let dict = JSON.parse(localStorage.getItem('groups')) || {}
-            dict[set] = dict[set] || {}
-            // Show all available sets
-            for (let key of Object.keys(dict[set])) { addOption(key) }
-            localStorage.setItem('groups', JSON.stringify(dict))
-        }
+        if (!regex.test(currentTab.url)) { window.close(); return }
+        
+        set = currentTab.url.split('/')[3]
+        let dict = JSON.parse(localStorage.getItem('groups')) || {}
+        dict[set] = dict[set] || {}
+        // Show all available sets
+        for (let key of Object.keys(dict[set])) addOption(key)
+        localStorage.setItem('groups', JSON.stringify(dict))
     })
 }
 
