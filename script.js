@@ -30,12 +30,9 @@ function saveStarredItems() {
 
         if (Object.keys(starredItems).length === 0) { return false }
         if (groups[set].hasOwnProperty(input.value)) {
-            if (!confirm(`There already exists a group with the name ${input.value}. Do you want to override it?`)) {
-                return false
-            }
-        }
+            if (!confirm(`There already exists a group with the name ${input.value}. Do you want to override it?`)) return false
+        } else addOption(input.value)
 
-        addOption(input.value)
         groups[set][input.value] = starredItems
         localStorage.setItem('groups', JSON.stringify(groups))
     })
