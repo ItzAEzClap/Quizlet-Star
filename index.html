@@ -8,16 +8,14 @@
 </head>
 <body>
     <div class="main-container">
-        <h1>Quizlet Helper</h1>
-        <input placeholder="Name" id="name">
-
-        <div>
+        <h1 id="title">Quizlet Helper</h1>
+        <div id="enter">
+            <input placeholder="Set name" id="name" autocomplete="off">
             <button id="save">Save</button>
-            <button id="load">Load</button>
-            <button id="remove">Remove</button>
         </div>
-        <h2><u>Available Sets</u></h2>
-        <section></section>
+
+        <h1><u>Available Sets</u></h1>
+        <ul id="set-container"></ul>
     </div>
     <script src="script.js"></script>
 </body>

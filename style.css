@@ -1,5 +1,4 @@
 html, body {
-    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,19 +9,75 @@ html, body {
 
 .main-container {
     position: absolute;
-    background-color: rgba(0, 0, 255, 0.5);
     display: flex;
     flex-direction: column;
     align-items: center;
     width: fit-content;
     height: 100%;
+    width: 100%;
+    padding-left: 7rem;
+    padding-right: 7rem;
+}
+
+#title {
+    font-size: 4em;
+    font-weight: bold;
+}
+
+#enter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 #name {
     all: unset;
-    background-color: white;
-    border: 1px solid black;
-    border-radius: 5px;
-    height: 20px;
+    border: 1.5px solid black;
+    border-radius: 1em;
     font-size: 20px;
+    text-align: center;
+}
+
+button {
+    font-size: 20px;
+    border-radius: .5rem;
+    border: 1px solid black;
+    
+    &:hover {
+        background-color: rgb(230, 230, 230);
+    }
+
+    &:active {
+        background-color: rgb(210, 210, 210);
+    }
+}
+
+.group {
+    display: flex;
+    font-size: 20px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.group-btns {
+    display: flex; 
+    align-items: center;
+    margin-left: 1rem;
+    gap: 10px;
+}
+
+.group-btns > button {
+    font-size: 10px;
+    border: 1px solid black;
+    height: fit-content;
+    margin-top: 4px;
+}
+
+#set-container {
+    position: relative;
+    overflow-y: auto;
+    left: 50px;
+    width: 300px;
 }

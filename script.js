@@ -1,15 +1,30 @@
 const input = document.getElementById('name')
-const save = document.getElementById('save')
-const load = document.getElementById('load')
-const remove = document.getElementById('remove')
-let tab = ""
+const save = document.getElementById('save'); save.onclick = () => saveStarredItems()
+const setContainer = document.getElementById('set-container')
+let currentTab = ""
 let set = ""
-init()
+
+function init() {
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        currentTab = tabs[0]
+        const regex = /^https:\/\/quizlet\.com\/\d+\/.*$/
+        
+        if (!regex.test(currentTab.url)) { window.close() }
+        else {
+            set = currentTab.url.split('/')[3]
+            let dict = JSON.parse(localStorage.getItem('groups')) || {}
+            dict[set] = dict[set] || {}
+            // Show all available sets
+            for (let key of Object.keys(dict[set])) { addOption(key) }
+            localStorage.setItem('groups', JSON.stringify(dict))
+        }
+    })
+}
 
 function saveStarredItems() {
     if (input.value.length === 0) { return false }
 
-    chrome.tabs.sendMessage(tab.id, { type: 'save' }, response => {
+    chrome.tabs.sendMessage(currentTab.id, { type: 'save' }, response => {
         let starredItems = response
         let groups = JSON.parse(localStorage.getItem('groups'))
 
@@ -26,51 +41,29 @@ function saveStarredItems() {
     })
 }
 
-function removeGroup() {
-    let groups = JSON.parse(localStorage.getItem('groups'))
-    removeOption(input.value)
-    delete groups[set][input.value]
-    localStorage.setItem('groups', JSON.stringify(groups))
-}
-
-function loadStarredItems() {
-    if (input.value.length === 0) { return false }
-
-    let groups = JSON.parse(localStorage.getItem('groups'))
-    chrome.tabs.sendMessage(tab.id, { type: 'load', data: groups[set][input.value] })
-}
-
-
-function init() {
-    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
-        tab = tabs[0]
-        const regex = /^https:\/\/quizlet\.com\/\d+\/.*$/
-        
-        if (!regex.test(tab.url)) { window.close() }
-        else {
-            set = tab.url.split('/')[3]
-            let dict = JSON.parse(localStorage.getItem('groups')) || {}
-            dict[set] = dict[set] || {}
-            // Show all available sets
-            for (let key of Object.keys(dict[set])) { addOption(key) }
-            localStorage.setItem('groups', JSON.stringify(dict))
-        }
-    })
-}
-
 function addOption(name) {
-    let option = document.createElement('option')
-    option.textContent = name
-    option.type = 'button'
-    document.querySelector('section').appendChild(option)
-}
-
-function removeOption(name) {
-    for (let child of document.querySelector('section').children) {
-        if (child.value === name) { document.querySelector('section').removeChild(child) }
+    let c1 = document.createElement('div'); c1.className = 'group'
+    let c2 = document.createElement('div'); c2.className = 'group-btns'
+    let option = document.createElement('li'); option.textContent = name
+    
+    let load = document.createElement('button'); load.textContent = "Load"; load.onclick = () => {
+        let groups = JSON.parse(localStorage.getItem('groups'))
+        chrome.tabs.sendMessage(currentTab.id, { type: 'load', data: groups[set][name] })
     }
+    
+    let remove = document.createElement('button'); remove.textContent = "Remove"; remove.onclick = () => {
+        setContainer.removeChild(load.parentNode.parentNode)
+    
+        let groups = JSON.parse(localStorage.getItem('groups'))
+        delete groups[set][name]
+        localStorage.setItem('groups', JSON.stringify(groups))
+    }
+    
+    c2.appendChild(load)
+    c2.appendChild(remove)
+    c1.appendChild(option)
+    c1.appendChild(c2)
+    setContainer.appendChild(c1)
 }
 
-save.addEventListener('click', saveStarredItems)
-load.addEventListener('click', loadStarredItems)
-remove.addEventListener('click', removeGroup)
+init()
