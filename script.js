@@ -34,6 +34,7 @@ function saveStarredItems() {
 
         groups[set][input.value] = starredItems
         localStorage.setItem('groups', JSON.stringify(groups))
+        input.value = "";
     })
 }
 
